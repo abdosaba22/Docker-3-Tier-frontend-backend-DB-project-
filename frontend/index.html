@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Frontend App</title>
+</head>
+<body>
+    <h1>Abdalrahman Amin Sabaa </h1>
+    <table id="recordsTable" border="1">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+            </tr>
+        </thead>
+        <tbody>
+            </tbody>
+    </table>
+
+    <script>
+        async function fetchRecords() {
+            const backendUrl = '/get-records'; 
+            try {
+                const response = await fetch(backendUrl);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                displayRecords(data.records); 
+                
+            } catch (error) {
+                console.error("Error",error);
+		document.getElementById('recordsTable').innerHTML = '<tr><td colspan="2">Can\'t connect to backend</td></tr>';		
+            }
+
+        }
+
+        function displayRecords(records) {
+            const tableBody = document.querySelector('#recordsTable tbody');
+            tableBody.innerHTML = '';
+
+            if (records && records.length > 0) {
+                records.forEach(record => {
+                    const row = tableBody.insertRow();
+                    const idCell = row.insertCell();
+                    const nameCell = row.insertCell();
+                    
+                    idCell.textContent = record[0]; // ID
+                    nameCell.textContent = record[1]; // Name
+                });
+            } else {
+                const row = tableBody.insertRow();
+                const cell = row.insertCell();
+                cell.colSpan = 2;
+                cell.textContent = "there is nothing";
+            }
+        }
+        window.onload = fetchRecords;
+    </script>
+
+</body>
+</html>
