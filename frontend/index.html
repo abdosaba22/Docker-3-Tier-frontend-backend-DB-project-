@@ -1,23 +1,137 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Frontend App</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Frontend App - Data Display</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f2f5;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+        }
+        .container {
+            width: 90%;
+            max-width: 700px;
+            margin-top: 50px;
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #007bff;
+            text-align: center;
+            margin-bottom: 5px;
+            font-size: 2.2em;
+        }
+        .header-info {
+            text-align: center;
+            color: #6c757d;
+            margin-bottom: 25px;
+            border-bottom: 1px solid #dee2e6;
+            padding-bottom: 15px;
+        }
+        /* Button Style */
+        #loadDataBtn {
+            display: block;
+            width: 200px;
+            padding: 12px 15px;
+            margin: 0 auto 30px auto;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1em;
+            transition: background-color 0.3s ease, transform 0.1s ease;
+        }
+        #loadDataBtn:hover {
+            background-color: #218838;
+            transform: translateY(-2px);
+        }
+        #loadDataBtn:active {
+            transform: translateY(0);
+        }
+        /* Table Style */
+        #recordsTable {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            text-align: left;
+        }
+        #recordsTable thead th {
+            background-color: #007bff;
+            color: white;
+            padding: 15px;
+            border: 1px solid #0056b3;
+            font-weight: 600;
+        }
+        #recordsTable tbody td {
+            padding: 12px 15px;
+            border: 1px solid #dee2e6;
+        }
+        #recordsTable tbody tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+        #recordsTable tbody tr:hover {
+            background-color: #e9ecef;
+        }
+        /* Message Status */
+        .status-message {
+            text-align: center;
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+        }
+        .status-loading {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        .status-error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+    </style>
 </head>
 <body>
-    <h1>Abdalrahman Amin Sabaa </h1>
-    <table id="recordsTable" border="1">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Name</th>
-            </tr>
-        </thead>
-        <tbody>
-            </tbody>
-    </table>
+    <div class="container">
+        <h1>Data Records Display</h1>
+        <div class="header-info">
+            Developed by: **Abdalrahman Amin Sabaa**
+        </div>
+
+        <button id="loadDataBtn">Load Data</button>
+        
+        <div id="statusMessage" class="status-message">Ready to load data.</div>
+
+        <table id="recordsTable">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                </tr>
+            </thead>
+            <tbody>
+                </tbody>
+        </table>
+    </div>
 
     <script>
+        function displayStatus(msg, type = '') {
+            const statusDiv = document.getElementById('statusMessage');
+            statusDiv.textContent = msg;
+            statusDiv.className = `status-message ${type ? 'status-' + type : ''}`;
+        }
+        
         async function fetchRecords() {
+            displayStatus('Loading records...', 'loading');
             const backendUrl = '/get-records'; 
             try {
                 const response = await fetch(backendUrl);
@@ -27,37 +141,47 @@
                 }
                 
                 const data = await response.json();
-                displayRecords(data.records); 
-                
-            } catch (error) {
-                console.error("Error",error);
-		document.getElementById('recordsTable').innerHTML = '<tr><td colspan="2">Can\'t connect to backend</td></tr>';		
-            }
+                const actualArray = data.records;
 
+                displayRecords(actualArray);
+                displayStatus('Data loaded successfully!', 'success'); 
+            } catch (error) {
+                console.error('Failed to fetch records:', error);
+                displayStatus(`Error: ${error.message}. Could not load data.`, 'error');
+                const tableBody = document.querySelector('#recordsTable tbody');
+                tableBody.innerHTML = '<tr><td colspan="2" style="text-align:center; color:red;">Failed to connect to Backend.</td></tr>';
+            }
         }
 
         function displayRecords(records) {
             const tableBody = document.querySelector('#recordsTable tbody');
             tableBody.innerHTML = '';
-
             if (records && records.length > 0) {
                 records.forEach(record => {
                     const row = tableBody.insertRow();
                     const idCell = row.insertCell();
                     const nameCell = row.insertCell();
                     
-                    idCell.textContent = record[0]; // ID
-                    nameCell.textContent = record[1]; // Name
+                    idCell.textContent = record[0]; // ID (Index 0)
+                    nameCell.textContent = record[1]; // Name (Index 1)
                 });
             } else {
                 const row = tableBody.insertRow();
                 const cell = row.insertCell();
                 cell.colSpan = 2;
-                cell.textContent = "there is nothing";
+		cell.textContent = "No records available to display.";
+                cell.style.textAlign = "center";
+                cell.style.fontStyle = "italic";
             }
         }
-        window.onload = fetchRecords;
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            const loadDataBtn = document.getElementById('loadDataBtn');
+            loadDataBtn.addEventListener('click', fetchRecords);
+            
+            displayStatus('Click the button to load student data.', 'info');
+        });
+        
     </script>
-
 </body>
 </html>

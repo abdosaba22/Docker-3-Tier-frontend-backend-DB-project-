@@ -1,14 +1,12 @@
 version: '3.8'
 services: 
   frontend_service:
-    image: httpd:2.4
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile  
     container_name: frontend
     ports:
       - 8080:80
-    volumes:
-      - ./frontend/index.html:/usr/local/apache2/htdocs/index.html:ro  
-      - ./frontend/proxy_modules.conf:/usr/local/apache2/conf/extra/proxy_modules.conf  
-      - ./frontend/vhost.conf:/usr/local/apache2/conf/extra/vhost.conf
     networks:
       - frontend_network
     depends_on:
@@ -19,8 +17,6 @@ services:
       context: ./backend
       dockerfile: Dockerfile
     container_name: backend
-    expose:
-      - 5000
     networks:
       - frontend_network
       - backend_network

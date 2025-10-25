@@ -59,28 +59,6 @@ COPY frontend/proxy_modules.conf /usr/local/apache2/conf/extra/proxy_modules.con
 
 ---
 
-### 🧩 Option 2 — Copy into a Running Container
-
-If the frontend container is already running:
-
-```bash
-docker cp frontend/vhost.conf frontend_service:/usr/local/apache2/conf/extra/httpd-vhosts.conf
-docker cp frontend/proxy_modules.conf frontend_service:/usr/local/apache2/conf/extra/proxy_modules.conf
-```
-
-Then, connect to the container and include them in Apache’s main config:
-
-```bash
-docker exec -it frontend_service bash
-echo "Include conf/extra/httpd-vhosts.conf" >> /usr/local/apache2/conf/httpd.conf
-echo "Include conf/extra/proxy_modules.conf" >> /usr/local/apache2/conf/httpd.conf
-apachectl -k graceful
-```
-
-✅ Once done, the proxy will be fully functional.
-
----
-
 ## 🌐 Accessing the Application
 
 After all containers start (wait ~10 seconds for the database initialization):
@@ -98,18 +76,21 @@ After all containers start (wait ~10 seconds for the database initialization):
 ```bash
 .
 ├── frontend/
-│   ├── proxy_modules.conf
-│   ├── vhost.conf
-│   └── index.html
+│   ├── proxy_modules.conf
+│   ├── vhost.conf
+│   ├── index.html
+│   └── Dockerfile        
 ├── backend/
-│   ├── app.py
-│   ├── requirements.txt
-│   └── init_db.sql
+│   ├── app.py
+│   ├── requirements.txt
+│   ├── init_db.sql
+│   └── Dockerfile        
 ├── database/
-│   └── student_data.sql
+│   └── createtables.sql         
 ├── docker-compose.yml
 └── README.md
 ```
+
 
 ---
 
