@@ -39,26 +39,6 @@ docker-compose up --build -d
 
 ---
 
-## 📂 Configuration Setup (Important Step)
-
-Before running the containers, make sure the Apache configuration files are copied into the correct path inside the `frontend_service` image or container.
-
-You can do this in two ways:
-
----
-
-### 🧠 Option 1 — Copy via Dockerfile (Recommended)
-
-If you’re building a custom Apache image:
-
-```dockerfile
-FROM httpd:2.4
-COPY frontend/vhost.conf /usr/local/apache2/conf/extra/httpd-vhosts.conf
-COPY frontend/proxy_modules.conf /usr/local/apache2/conf/extra/proxy_modules.conf
-```
-
----
-
 ## 🌐 Accessing the Application
 
 After all containers start (wait ~10 seconds for the database initialization):
