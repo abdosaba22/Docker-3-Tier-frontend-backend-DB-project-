@@ -54,9 +54,9 @@ After all containers start (wait ~10 seconds for the database initialization):
 
 Here is a view of the working application:
 
-![Frontend Application Screenshot](Pics/frontend.png)
+![Frontend Application Screenshot](Pics/Frontend.png)
 
-![Frontend Application with Data Loaded Screenshot](Pics/frontend-Loaddata.png)
+![Frontend Application with Data Loaded Screenshot](Pics/Frontend-Loaddata.png)
 
 Here is how data returned from backend to frontend in json frormat 
 
