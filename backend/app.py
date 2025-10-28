@@ -4,6 +4,44 @@ import os
 
 app = Flask(__name__)
 
+from flask import request
+
+@app.route('/add-record', methods=['POST'])
+def add_record():
+    DB_HOST = os.environ.get('DB_HOST')
+    DB_USER = os.environ.get('DB_USER')
+    DB_PASSWORD = os.environ.get('DB_PASSWORD')
+    DB_NAME = os.environ.get('DB_NAME')
+
+    data = request.get_json()
+    name = data.get('name')
+    major = data.get('major')
+
+    if not name or not major:
+        return jsonify({"error": "Missing name or major"}), 400
+
+    try:
+        connection = pymysql.connect(
+            host=DB_HOST,
+            user=DB_USER,
+            password=DB_PASSWORD,
+            db=DB_NAME,
+            cursorclass=pymysql.cursors.Cursor
+        )
+
+        with connection.cursor() as cursor:
+            sql = "INSERT INTO students (name, major) VALUES (%s, %s)"
+            cursor.execute(sql, (name, major))
+            connection.commit()
+
+        connection.close()
+        return jsonify({"message": "Student added successfully"}), 200
+
+    except Exception as e:
+        print(f"Database insert error: {e}")
+        return jsonify({"error": "Failed to add student"}), 500
+
+
 @app.route('/get-records', methods=['GET'])
 def get_records():
     DB_HOST = os.environ.get('DB_HOST')

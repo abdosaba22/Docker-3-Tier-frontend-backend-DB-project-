@@ -107,6 +107,12 @@
             Developed by: **Abdalrahman Amin Sabaa**
         </div>
 
+	<form id="addDataForm" style="margin-bottom: 30px;">
+    		<input type="text" id="studentName" placeholder="Enter Name" required style="padding: 8px; margin-right: 10px;">
+    		<input type="text" id="studentMajor" placeholder="Enter Major" required style="padding: 8px; margin-right: 10px;">
+    		<button type="submit" style="padding: 10px 15px; background-color: #007bff; color: white; border: none; border-radius: 6px; cursor: pointer;">Add Student</button>
+	</form>
+
         <button id="loadDataBtn">Load Data</button>
         
         <div id="statusMessage" class="status-message">Ready to load data.</div>
@@ -116,6 +122,7 @@
                 <tr>
                     <th>ID</th>
                     <th>Name</th>
+		    <th>Major</th>
                 </tr>
             </thead>
             <tbody>
@@ -152,29 +159,70 @@
                 tableBody.innerHTML = '<tr><td colspan="2" style="text-align:center; color:red;">Failed to connect to Backend.</td></tr>';
             }
         }
+	
+	
+	function displayRecords(records) {
+	    const tableBody = document.querySelector('#recordsTable tbody');
+	    tableBody.innerHTML = '';
+	    if (records && records.length > 0) {
+	        records.forEach(record => {
+	            const row = tableBody.insertRow();
+	            const idCell = row.insertCell();
+	            const nameCell = row.insertCell();
+	            const majorCell = row.insertCell();
+	
+        	    idCell.textContent = record[0]; // ID
+        	    nameCell.textContent = record[1]; // Name
+        	    majorCell.textContent = record[2]; // Major
+       	 });
+   	 } else {
+        	const row = tableBody.insertRow();
+        	const cell = row.insertCell();
+        	cell.colSpan = 3;
+       		cell.textContent = "No records available to display.";
+	        cell.style.textAlign = "center";
+	        cell.style.fontStyle = "italic";
+	    }
+	}
 
-        function displayRecords(records) {
-            const tableBody = document.querySelector('#recordsTable tbody');
-            tableBody.innerHTML = '';
-            if (records && records.length > 0) {
-                records.forEach(record => {
-                    const row = tableBody.insertRow();
-                    const idCell = row.insertCell();
-                    const nameCell = row.insertCell();
-                    
-                    idCell.textContent = record[0]; // ID (Index 0)
-                    nameCell.textContent = record[1]; // Name (Index 1)
-                });
-            } else {
-                const row = tableBody.insertRow();
-                const cell = row.insertCell();
-                cell.colSpan = 2;
-		cell.textContent = "No records available to display.";
-                cell.style.textAlign = "center";
-                cell.style.fontStyle = "italic";
-            }
-        }
-        
+	
+
+	document.getElementById('addDataForm').addEventListener('submit', async function(e) {
+   		 e.preventDefault();
+
+   		const name = document.getElementById('studentName').value.trim();
+		const major = document.getElementById('studentMajor').value.trim();
+
+	    	if (!name || !major) {
+	        	displayStatus('Please enter both name and major.', 'error');
+	        	return;
+	    	}
+
+	    	displayStatus('Sending data...', 'loading');
+	
+	    try {
+	        const response = await fetch('/add-record', {
+	            method: 'POST',
+	            headers: {
+	                'Content-Type': 'application/json'
+	            },
+	            body: JSON.stringify({ name, major })
+	        });
+	
+	        if (!response.ok) {
+	            throw new Error(`Server error: ${response.status}`);
+	        }
+
+	        displayStatus('Student added successfully!', 'success');
+	        document.getElementById('addDataForm').reset();
+	        fetchRecords(); // Reload table
+	    } catch (error) {
+	        console.error('Add record failed:', error);
+	        displayStatus(`Error: ${error.message}`, 'error');
+	    }
+	});
+
+
         document.addEventListener('DOMContentLoaded', () => {
             const loadDataBtn = document.getElementById('loadDataBtn');
             loadDataBtn.addEventListener('click', fetchRecords);
