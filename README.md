@@ -82,6 +82,10 @@ The project now includes Kubernetes manifests to deploy the same architecture on
 | **Secrets**   | Kubernetes Secret    | Injected into backend and DB |
 | **Init Script** | ConfigMap          | Used to initialize DB schema |
 
+---
+
+# K8s Project Diagram 
+![K8s Project Diagram](Pics/k8sDiagram.drawio.png)
 
 > All manifests are located in the `k8s/` folder.
 
