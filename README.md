@@ -82,15 +82,14 @@ The project now includes Kubernetes manifests to deploy the same architecture on
 | **Secrets**   | Kubernetes Secret    | Injected into backend and DB |
 | **Init Script** | ConfigMap          | Used to initialize DB schema |
 
+
 > All manifests are located in the `k8s/` folder.
 
 To deploy on Kubernetes:
 
 ```bash
 kubectl apply -f k8s/
-
----
-
+'''
 
 ---
 
