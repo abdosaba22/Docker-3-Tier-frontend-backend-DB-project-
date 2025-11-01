@@ -93,10 +93,7 @@ kubectl apply -f k8s/
 ---
 
 ### Application Screens
-
----
-
-## 📸 AWS Deployment Screenshots
+# 📸 AWS Deployment Screenshots
 
 Here are screenshots from the live deployment on AWS:
 
