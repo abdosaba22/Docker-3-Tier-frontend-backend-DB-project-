@@ -89,13 +89,12 @@ To deploy on Kubernetes:
 
 ```bash
 kubectl apply -f k8s/
-```
+```markdown
 
 ---
 
 ### Application Screens
 
-```markdown
 ---
 
 ## 📸 AWS Deployment Screenshots
