@@ -89,8 +89,7 @@ To deploy on Kubernetes:
 
 ```bash
 kubectl apply -f k8s/
-```markdown
-
+```
 ---
 
 ### Application Screens
@@ -101,8 +100,7 @@ kubectl apply -f k8s/
 
 Here are screenshots from the live deployment on AWS:
 
-| Screenshot | Description |
-|------------|-------------|
+
 | ![K8s Dashboard](Pics/masternode.png) | Kubernetes Dashboard showing Cluster |
 | ![Access App using aws LoadBalancer](Pics/Frontend_awsLB.png) | Access App using aws LoadBalancer |
 | ![Load Data](Pics/Frontend_Load_usingaws.png) |  Access App using aws LoadBalancer |
