@@ -1,8 +1,13 @@
-# 🐳 Docker 3-Tier Student Data Application
+# 🐳 Docker & Kubernetes 3-Tier Student Data Application
 
 ## 📘 Description
 
-This project demonstrates a fully containerized **3-Tier Application** built with **Docker**, showcasing best practices for **isolation**, **security**, and **internal communication** between services.
+This project demonstrates a fully containerized **3-Tier Application** built with **Docker**, and now extended to support **Kubernetes (K8s)** for cloud-native orchestration. It showcases best practices for **isolation**, **security**, and **internal communication** between services.
+
+> 🔔 **New in this version:**  
+> - Added Kubernetes manifests for deploying the same 3-tier architecture on a K8s cluster  
+> - Tested on AWS EC2 instances with multi-node setup  
+> - Includes PersistentVolume setup using AWS EBS and HostPath for local testing
 
 | Layer | Technology | Container | Description |
 |:------|:------------|:-----------|:-------------|
@@ -65,26 +70,71 @@ Here is how data returned from backend to frontend in json frormat
 
 ---
 
+## ☸️ Kubernetes Extension
+
+The project now includes Kubernetes manifests to deploy the same architecture on a real cluster.
+
+| Component     | Resource Type        | Notes |
+|---------------|----------------------|-------|
+| **Frontend**  | Deployment + Service | Exposed via LoadBalancer |
+| **Backend**   | Deployment + Service | Internal ClusterIP |
+| **Database**  | Deployment + PVC     | Uses Local storage |
+| **Secrets**   | Kubernetes Secret    | Injected into backend and DB |
+| **Init Script** | ConfigMap          | Used to initialize DB schema |
+
+> All manifests are located in the `k8s/` folder.
+
+To deploy on Kubernetes:
+
+```bash
+kubectl apply -f k8s/
+
+---
+
+
+---
+
+### Application Screens
+
+```markdown
+---
+
+## 📸 AWS Deployment Screenshots
+
+Here are screenshots from the live deployment on AWS:
+
+| Screenshot | Description |
+|------------|-------------|
+| ![K8s Dashboard](Pics/masternode.png) | Kubernetes Dashboard showing Cluster |
+| ![Access App using aws LoadBalancer](Pics/Frontend_awsLB.png) | Access App using aws LoadBalancer |
+| ![Load Data](Pics/Frontend_Load_usingaws.png) |  Access App using aws LoadBalancer |
+| ![aws LB](Pics/awsLB.png) | aws Load balancer |
+
+> All screenshots are stored in the `Pics/` folder.
+
+
 ## 🧱 Project Structure
 
 ```bash
 .
-├── frontend/
-│   ├── proxy_modules.conf
-│   ├── vhost.conf
-│   ├── index.html
-│   └── Dockerfile        
-├── backend/
-│   ├── app.py
-│   ├── requirements.txt
-│   ├── init_db.sql
-│   └── Dockerfile        
-├── database/
-│   └── createtables.sql         
-├── docker-compose.yml
-└── README.md
-```
+├── Docker/                     # 🐳 Docker-based deployment
+│   ├── frontend/
+│   ├── backend/
+│   ├── database/
+│   └── docker-compose.yml      # Main Docker orchestration file
+│
+├── K8S/                        # ☸️ Kubernetes-based deployment
+│   ├── 1-Frontend/               # Frontend Deployment + Service + Configs
+│   ├── 2-Backend/                # Backend Deployment + Service + Secrets
+│   ├── 3-db/                     # MariaDB Deployment + PVC + PV + ConfigMap
+│   ├── 4-debugger/               # Debugging tools (e.g., curl pods, test configs)
+│   └── 5-ccm/                    # Cluster Configuration Management (e.g., StorageClass, RBAC)
+│
+├── Pics/                       # 📸 Screenshots for whole project deployment
+│   
+└── README.md                   # Project documentation
 
+```
 
 ---
 

@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-service-clusterip
+  labels:
+    app: backend-abdosaba
+spec:
+  selector:
+    app: backend-abdosaba
+  ports:
+    - protocol: TCP
+      port: 5000         
+      targetPort: 5000    
+  type: ClusterIP
+

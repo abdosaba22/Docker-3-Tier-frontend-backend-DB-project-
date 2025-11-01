@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend-abdosaba
+  labels:
+    app: frontend-abdosaba
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: frontend-abdosaba
+  template:
+    metadata:
+      labels:
+        app: frontend-abdosaba
+    spec:
+      containers:
+      - name: frontend-container
+        image: abdosaba22/frontend:v2
+        ports:
+        - containerPort: 80
+        env:
+        - name: BACKEND_URL
+          value: http://backend-service-clusterip:5000
+
